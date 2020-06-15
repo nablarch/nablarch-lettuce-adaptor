@@ -1,0 +1,114 @@
+version: '3'
+services:
+  # Simple
+  simple:
+    container_name: redisstore-simple
+    image: redis@sha256:43dbbe6f633572d66e84e7162245d8d70a18f00b819d6c0bf98ca02109f4788c
+    ports:
+      - "7000:6379"
+
+  # Master-Replica
+  master_node:
+    container_name: redisstore-master
+    build:
+      context: ./master-replica/master
+      dockerfile: Dockerfile
+    ports:
+      - "7101:7101"
+  replica_node1:
+    container_name: redisstore-replica1
+    build:
+      context: ./master-replica/replica1
+      dockerfile: Dockerfile
+    ports:
+      - "7102:7102"
+  replica_node2:
+    container_name: redisstore-replica2
+    build:
+      context: ./master-replica/replica2
+      dockerfile: Dockerfile
+    ports:
+      - "7103:7103"
+  sentinel1:
+    container_name: redisstore-sentinel1
+    build:
+      context: ./master-replica/sentinel1
+      dockerfile: Dockerfile
+    ports:
+      - "7111:7111"
+  sentinel2:
+    container_name: redisstore-sentinel2
+    build:
+      context: ./master-replica/sentinel2
+      dockerfile: Dockerfile
+    ports:
+      - "7112:7112"
+  sentinel3:
+    container_name: redisstore-sentinel3
+    build:
+      context: ./master-replica/sentinel3
+      dockerfile: Dockerfile
+    ports:
+      - "7113:7113"
+
+  # Cluster
+  cluster_node1:
+    container_name: redisstore-cluster-1_1
+    build:
+      context: ./cluster/1_1
+      dockerfile: Dockerfile
+    ports:
+      - "7211:7211"
+      - "17211:17211"
+  cluster_node2:
+    container_name: redisstore-cluster-1_2
+    build:
+      context: ./cluster/1_2
+      dockerfile: Dockerfile
+    ports:
+      - "7212:7212"
+      - "17212:17212"
+  cluster_node3:
+    container_name: redisstore-cluster-2_1
+    build:
+      context: ./cluster/2_1
+      dockerfile: Dockerfile
+    ports:
+      - "7221:7221"
+      - "17221:17221"
+  cluster_node4:
+    container_name: redisstore-cluster-2_2
+    build:
+      context: ./cluster/2_2
+      dockerfile: Dockerfile
+    ports:
+      - "7222:7222"
+      - "17222:17222"
+  cluster_node5:
+    container_name: redisstore-cluster-3_1
+    build:
+      context: ./cluster/3_1
+      dockerfile: Dockerfile
+    ports:
+      - "7231:7231"
+      - "17231:17231"
+  cluster_node6:
+    container_name: redisstore-cluster-3_2
+    build:
+      context: ./cluster/3_2
+      dockerfile: Dockerfile
+    ports:
+      - "7232:7232"
+      - "17232:17232"
+  create_cluster:
+    container_name: create_cluster
+    build:
+      context: ./cluster/create-cluster
+      dockerfile: Dockerfile
+    depends_on:
+      - cluster_node1
+      - cluster_node2
+      - cluster_node3
+      - cluster_node4
+      - cluster_node5
+      - cluster_node6
