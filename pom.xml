@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.nablarch.integration</groupId>
-  <artifactId>nablarch-redisstore-lettuce-adaptor</artifactId>
+  <artifactId>nablarch-lettuce-adaptor</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
   <scm>
@@ -43,6 +43,11 @@
     <dependency>
       <groupId>com.nablarch.dev</groupId>
       <artifactId>nablarch-test-support</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jmockit</groupId>
+      <artifactId>jmockit</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

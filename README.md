@@ -1,4 +1,4 @@
-# nablarch-redisstore-lettuce-adaptor
+# nablarch-lettuce-adaptor
 
 ## 単体テストの実行方法
 本モジュールの単体テストを実行するためには、Redisを別途起動しておく必要がある。
