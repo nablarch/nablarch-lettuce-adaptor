@@ -61,4 +61,17 @@ public class RedisHealthCheckerTest {
             times = 1;
         }};
     }
+
+    @Test
+    public void defaultName() {
+        RedisHealthChecker sut = new RedisHealthChecker();
+        assertThat(sut.getName(), is("Redis"));
+    }
+
+    @Test
+    public void changeName() {
+        RedisHealthChecker sut = new RedisHealthChecker();
+        sut.setName("NoSQL");
+        assertThat(sut.getName(), is("NoSQL"));
+    }
 }
