@@ -19,6 +19,10 @@ public class RedisHealthChecker extends HealthChecker {
     private LettuceRedisClient client;
     private String key = "healthcheck";
 
+    public RedisHealthChecker() {
+        setName("Redis");
+    }
+
     @Override
     protected boolean tryOut(HttpRequest request, ExecutionContext context) {
         client.exists(key);
