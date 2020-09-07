@@ -4,6 +4,8 @@ import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.StringCodec;
+import mockit.Mocked;
+import mockit.Verifications;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -149,9 +151,32 @@ public class LettuceSimpleRedisClientTest {
         assertThat(actual, is("simple"));
     }
 
+    @Test
+    public void testDispose(@Mocked RedisClient client, @Mocked StatefulRedisConnection<byte[], byte[]> connection) {
+        LettuceSimpleRedisClient sut = new LettuceSimpleRedisClient() {
+            @Override
+            protected RedisClient createClient() {
+                return client;
+            }
+
+            @Override
+            protected StatefulRedisConnection<byte[], byte[]> createConnection(RedisClient client) {
+                return connection;
+            }
+        };
+
+        sut.initialize();
+        sut.dispose();
+
+        new Verifications() {{
+            connection.close(); times = 1;
+            client.shutdown(); times = 1;
+        }};
+    }
+
     @After
     public void after() {
-        sut.shutdown();
+        sut.dispose();
         LETTUCE_COMMANDS.keys("*").forEach(key -> LETTUCE_COMMANDS.del(key));
     }
 
