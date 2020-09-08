@@ -6,6 +6,8 @@ import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.masterreplica.MasterReplica;
 import io.lettuce.core.masterreplica.StatefulRedisMasterReplicaConnection;
+import mockit.Mocked;
+import mockit.Verifications;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -167,9 +169,32 @@ public class LettuceMasterReplicaRedisClientTest {
         assertThat(actual, is("masterReplica"));
     }
 
+    @Test
+    public void testDispose(@Mocked RedisClient client, @Mocked StatefulRedisMasterReplicaConnection<byte[], byte[]> connection) {
+        LettuceMasterReplicaRedisClient sut = new LettuceMasterReplicaRedisClient() {
+            @Override
+            protected RedisClient createClient() {
+                return client;
+            }
+
+            @Override
+            protected StatefulRedisMasterReplicaConnection<byte[], byte[]> createConnection(RedisClient client) {
+                return connection;
+            }
+        };
+
+        sut.initialize();
+        sut.dispose();
+
+        new Verifications() {{
+            connection.close(); times = 1;
+            client.shutdown(); times = 1;
+        }};
+    }
+
     @After
     public void after() {
-        sut.shutdown();
+        sut.dispose();
         LETTUCE_COMMANDS.keys("*").forEach(key -> LETTUCE_COMMANDS.del(key));
     }
 

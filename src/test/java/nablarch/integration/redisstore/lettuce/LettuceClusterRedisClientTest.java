@@ -5,6 +5,8 @@ import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.codec.StringCodec;
+import mockit.Mocked;
+import mockit.Verifications;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -176,9 +178,32 @@ public class LettuceClusterRedisClientTest {
         assertThat("true if key exists.", sut.exists("foo"), is(true));
     }
 
+    @Test
+    public void testDispose(@Mocked RedisClusterClient client, @Mocked StatefulRedisClusterConnection<byte[], byte[]> connection) {
+        LettuceClusterRedisClient sut = new LettuceClusterRedisClient() {
+            @Override
+            protected RedisClusterClient createClient() {
+                return client;
+            }
+
+            @Override
+            protected StatefulRedisClusterConnection<byte[], byte[]> createConnection(RedisClusterClient client) {
+                return connection;
+            }
+        };
+
+        sut.initialize();
+        sut.dispose();
+
+        new Verifications() {{
+            connection.close(); times = 1;
+            client.shutdown(); times = 1;
+        }};
+    }
+
     @After
     public void after() {
-        sut.shutdown();
+        sut.dispose();
         LETTUCE_COMMANDS.keys("*").forEach(key -> LETTUCE_COMMANDS.del(key));
     }
 

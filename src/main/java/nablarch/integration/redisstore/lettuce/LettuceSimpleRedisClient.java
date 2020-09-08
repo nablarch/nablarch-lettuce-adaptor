@@ -112,7 +112,7 @@ public class LettuceSimpleRedisClient extends AbstractLettuceRedisClient impleme
     }
 
     @Override
-    public void shutdown() {
+    public void dispose() {
         connection.close();
         client.shutdown();
     }

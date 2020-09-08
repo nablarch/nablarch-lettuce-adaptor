@@ -22,7 +22,7 @@ public class AbstractLettuceRedisClientTest {
             @Override public byte[] get(String key) { return new byte[0]; }
             @Override public void del(String key) {}
             @Override public boolean exists(String key) { return false; }
-            @Override public void shutdown() {}
+            @Override public void dispose() {}
         };
 
         String actual = sut.getType();

@@ -117,7 +117,7 @@ public class LettuceClusterRedisClient extends AbstractLettuceRedisClient implem
     }
 
     @Override
-    public void shutdown() {
+    public void dispose() {
         connection.close();
         client.shutdown();
     }
