@@ -1,28 +1,24 @@
 package nablarch.integration.health;
 
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
 import nablarch.integration.redisstore.lettuce.LettuceRedisClient;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * {@link RedisHealthChecker}のテスト。
  */
 public class RedisHealthCheckerTest {
 
-    @Mocked
-    private LettuceRedisClient client;
+    private final LettuceRedisClient client = mock(LettuceRedisClient.class);
 
     @Test
     public void success() {
-        new Expectations() {{
-            client.exists("healthcheck");
-            result = false;
-        }};
+        when(client.exists("healthcheck")).thenReturn(false);
 
         RedisHealthChecker sut = new RedisHealthChecker();
         sut.setClient(client);
@@ -32,10 +28,7 @@ public class RedisHealthCheckerTest {
 
     @Test
     public void failureByException() {
-        new Expectations() {{
-            client.exists("healthcheck");
-            result = new RuntimeException();
-        }};
+        when(client.exists("healthcheck")).thenThrow(new RuntimeException());
 
         RedisHealthChecker sut = new RedisHealthChecker();
         sut.setClient(client);
@@ -45,10 +38,7 @@ public class RedisHealthCheckerTest {
 
     @Test
     public void changeKey() {
-        new Expectations() {{
-            client.exists("test");
-            result = false;
-        }};
+        when(client.exists("test")).thenReturn(false);
 
         RedisHealthChecker sut = new RedisHealthChecker();
         sut.setClient(client);
@@ -56,10 +46,7 @@ public class RedisHealthCheckerTest {
 
         assertThat(sut.check(null, null), is(true));
 
-        new Verifications() {{
-            client.exists("test");
-            times = 1;
-        }};
+        verify(client).exists("test");
     }
 
     @Test

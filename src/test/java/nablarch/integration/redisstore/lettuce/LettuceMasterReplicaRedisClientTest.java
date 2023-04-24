@@ -6,8 +6,6 @@ import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.masterreplica.MasterReplica;
 import io.lettuce.core.masterreplica.StatefulRedisMasterReplicaConnection;
-import mockit.Mocked;
-import mockit.Verifications;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -21,8 +19,13 @@ import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * {@link LettuceMasterReplicaRedisClient} のテストクラス。
@@ -170,7 +173,11 @@ public class LettuceMasterReplicaRedisClientTest {
     }
 
     @Test
-    public void testDispose(@Mocked RedisClient client, @Mocked StatefulRedisMasterReplicaConnection<byte[], byte[]> connection) {
+    public void testDispose() {
+        RedisClient client = mock(RedisClient.class);
+        @SuppressWarnings("unchekced")
+        StatefulRedisMasterReplicaConnection<byte[], byte[]> connection = mock(StatefulRedisMasterReplicaConnection.class);
+
         LettuceMasterReplicaRedisClient sut = new LettuceMasterReplicaRedisClient() {
             @Override
             protected RedisClient createClient() {
@@ -186,10 +193,8 @@ public class LettuceMasterReplicaRedisClientTest {
         sut.initialize();
         sut.dispose();
 
-        new Verifications() {{
-            connection.close(); times = 1;
-            client.shutdown(); times = 1;
-        }};
+        verify(connection).close();
+        verify(client).shutdown();
     }
 
     @After
