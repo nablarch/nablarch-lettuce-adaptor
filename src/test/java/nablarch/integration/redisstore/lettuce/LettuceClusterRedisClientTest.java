@@ -5,8 +5,6 @@ import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.codec.StringCodec;
-import mockit.Mocked;
-import mockit.Verifications;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,8 +21,13 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * {@link LettuceClusterRedisClient} のテストクラス。
@@ -179,7 +182,11 @@ public class LettuceClusterRedisClientTest {
     }
 
     @Test
-    public void testDispose(@Mocked RedisClusterClient client, @Mocked StatefulRedisClusterConnection<byte[], byte[]> connection) {
+    public void testDispose() {
+        RedisClusterClient client = mock(RedisClusterClient.class);
+        @SuppressWarnings("unchecked")
+        StatefulRedisClusterConnection<byte[], byte[]> connection = mock(StatefulRedisClusterConnection.class);
+        
         LettuceClusterRedisClient sut = new LettuceClusterRedisClient() {
             @Override
             protected RedisClusterClient createClient() {
@@ -195,10 +202,8 @@ public class LettuceClusterRedisClientTest {
         sut.initialize();
         sut.dispose();
 
-        new Verifications() {{
-            connection.close(); times = 1;
-            client.shutdown(); times = 1;
-        }};
+        verify(connection).close();
+        verify(client).shutdown();
     }
 
     @After
