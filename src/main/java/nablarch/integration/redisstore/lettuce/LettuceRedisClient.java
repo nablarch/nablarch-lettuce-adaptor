@@ -1,12 +1,14 @@
 package nablarch.integration.redisstore.lettuce;
 
 import nablarch.core.repository.disposal.Disposable;
+import nablarch.core.util.annotation.Published;
 
 /**
  * セッションストアの実装に必要となる Redis コマンドを定義したインターフェース。
  *
  * @author Tanaka Tomoyuki
  */
+@Published(tag = "architect")
 public interface LettuceRedisClient extends Disposable {
 
     /**

@@ -6,6 +6,7 @@ import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.sync.RedisAdvancedClusterCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import nablarch.core.repository.initialization.Initializable;
+import nablarch.core.util.annotation.Published;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  *
  * @author Tanaka Tomoyuki
  */
+@Published(tag = "architect")
 public class LettuceClusterRedisClient extends AbstractLettuceRedisClient implements Initializable {
     private RedisClusterClient client;
     private StatefulRedisClusterConnection<byte[], byte[]> connection;
