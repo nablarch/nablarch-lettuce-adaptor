@@ -5,6 +5,7 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import nablarch.core.repository.initialization.Initializable;
+import nablarch.core.util.annotation.Published;
 
 /**
  * 単一の Redis インスタンスに直接接続するためのシンプルな {@link LettuceRedisClient} 実装クラス。
@@ -14,6 +15,7 @@ import nablarch.core.repository.initialization.Initializable;
  *
  * @author Tanaka Tomoyuki
  */
+@Published(tag = "architect")
 public class LettuceSimpleRedisClient extends AbstractLettuceRedisClient implements Initializable {
     private RedisClient client;
     private StatefulRedisConnection<byte[], byte[]> connection;
