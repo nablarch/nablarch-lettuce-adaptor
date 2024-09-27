@@ -7,6 +7,7 @@ import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.masterreplica.MasterReplica;
 import io.lettuce.core.masterreplica.StatefulRedisMasterReplicaConnection;
 import nablarch.core.repository.initialization.Initializable;
+import nablarch.core.util.annotation.Published;
 
 /**
  * Master/Replica 構成の Redis に接続するための {@link LettuceRedisClient} 実装。
@@ -16,6 +17,7 @@ import nablarch.core.repository.initialization.Initializable;
  *
  * @author Tanaka Tomoyuki
  */
+@Published(tag = "architect")
 public class LettuceMasterReplicaRedisClient extends AbstractLettuceRedisClient implements Initializable {
     private RedisClient client;
     private StatefulRedisMasterReplicaConnection<byte[], byte[]> connection;

@@ -1,5 +1,7 @@
 package nablarch.integration.redisstore.lettuce;
 
+import nablarch.core.util.annotation.Published;
+
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -7,6 +9,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author Tanaka Tomoyuki
  */
+@Published(tag = "architect")
 public abstract class AbstractLettuceRedisClient implements LettuceRedisClient {
     private final String type;
 
